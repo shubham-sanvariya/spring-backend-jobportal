@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shubh.jobportal.dto.UserDTO;
+import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.service.UserService;
 
 import jakarta.validation.Valid;
@@ -25,7 +26,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid UserDTO userDTO){
+    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid UserDTO userDTO) throws JobPortalException{
         return new ResponseEntity<>(userService.registerUser(userDTO),HttpStatus.CREATED);
     }
 }
