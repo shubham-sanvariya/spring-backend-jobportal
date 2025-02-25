@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.Data;
 
-@Document(collation = "sequence")
+@Document(collection = "sequence")
 @Data
 public class Sequence {
     @Id
