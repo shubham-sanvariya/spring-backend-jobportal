@@ -1,4 +1,4 @@
-package com.shubh.jobportal.utitlity;
+package com.shubh.jobportal.exception;
 
 import java.time.LocalDateTime;
 
