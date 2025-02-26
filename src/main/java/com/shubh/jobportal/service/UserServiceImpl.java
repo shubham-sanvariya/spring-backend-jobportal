@@ -21,6 +21,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) throws JobPortalException {
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new JobPortalException("USER_FOUND");
+        }
         userDTO.setId(Utilities.getNextSequence("users"));
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User user = userDTO.toEntity();
