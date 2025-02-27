@@ -49,7 +49,7 @@ public class Data {
         <p class="otp">OTP_PLACEHOLDER</p>
         <p>Please use this OTP to complete your verification process. It is valid for 10 minutes.</p>
         <p>If you did not request this, please ignore this email.</p>
-        <p class="footer">&copy; 2025 Job Portal. All rights reserved.</p>
+        <p class="footer">&copy; 2025 Job Fetch. All rights reserved.</p>
     </div>
 </body>
 </html>         

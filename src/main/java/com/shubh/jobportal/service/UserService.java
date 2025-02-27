@@ -10,4 +10,6 @@ public interface UserService {
     UserDTO loginUser(LoginDTO loginDTO) throws JobPortalException;
 
     UserDTO registerUser(UserDTO userDTO) throws JobPortalException;
+
+    void sendOtp(String email) throws Exception;
 }
