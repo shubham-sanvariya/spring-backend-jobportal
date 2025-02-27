@@ -12,4 +12,6 @@ public interface UserService {
     UserDTO registerUser(UserDTO userDTO) throws JobPortalException;
 
     void sendOtp(String email) throws Exception;
+
+    void verifyOTP(String email, String otp) throws Exception;
 }

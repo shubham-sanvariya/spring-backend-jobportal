@@ -17,7 +17,6 @@ import com.shubh.jobportal.repo.UserRepository;
 import com.shubh.jobportal.utitlity.Data;
 import com.shubh.jobportal.utitlity.Utilities;
 
-import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
@@ -71,5 +70,19 @@ public class UserServiceImpl implements UserService{
         message.setText(Data.getMessageBody(generatedOTP),true);
         mailSender.send(mm);
     }
+
+    @Override
+    public void verifyOTP(String email, String otp) throws Exception {
+        Otp otpEntity = otpRepository.findById(email).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
+
+        if (otpEntity.getCreationTime().plusMinutes(10).isBefore(LocalDateTime.now())) {
+            throw new JobPortalException("OTP_EXPIRED");
+        }
+
+        if (!otpEntity.getOtpCode().equals(otp)) {
+            throw new JobPortalException("OTP_INCORRECT");
+        }
+    }
+    
     
 }
