@@ -1,15 +1,24 @@
 package com.shubh.jobportal.service;
 
+import java.time.LocalDateTime;
+
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.dto.LoginDTO;
 import com.shubh.jobportal.dto.UserDTO;
+import com.shubh.jobportal.entity.Otp;
 import com.shubh.jobportal.entity.User;
 import com.shubh.jobportal.exception.JobPortalException;
+import com.shubh.jobportal.repo.OtpRepository;
 import com.shubh.jobportal.repo.UserRepository;
+import com.shubh.jobportal.utitlity.Data;
 import com.shubh.jobportal.utitlity.Utilities;
 
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -19,6 +28,10 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final JavaMailSender mailSender;
+
+    private final OtpRepository otpRepository;
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) throws JobPortalException {
@@ -41,6 +54,22 @@ public class UserServiceImpl implements UserService{
         }
 
         return user.toDTO();
+    }
+
+    @Override
+    public void sendOtp(String email) throws Exception {
+       userRepository.findByEmail(email).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
+
+       MimeMessage mm = mailSender.createMimeMessage();
+       MimeMessageHelper message = new MimeMessageHelper(mm, true);
+       message.setTo(email);
+       message.setSubject("Your OTP Code");
+
+       String generatedOTP = Utilities.generateOTP();
+       Otp otp = new Otp(email,generatedOTP, LocalDateTime.now());
+        otpRepository.save(otp);
+        message.setText(Data.getMessageBody(generatedOTP),true);
+        mailSender.send(mm);
     }
     
 }
