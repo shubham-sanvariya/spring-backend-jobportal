@@ -1,9 +1,11 @@
 package com.shubh.jobportal.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -73,16 +75,28 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void verifyOTP(String email, String otp) throws Exception {
-        Otp otpEntity = otpRepository.findById(email).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
-
-        if (otpEntity.getCreationTime().plusMinutes(10).isBefore(LocalDateTime.now())) {
-            throw new JobPortalException("OTP_EXPIRED");
-        }
+        Otp otpEntity = otpRepository.findById(email).orElseThrow(() -> new JobPortalException("OTP_EXPIRED"));
 
         if (!otpEntity.getOtpCode().equals(otp)) {
             throw new JobPortalException("OTP_INCORRECT");
         }
+
+        if (otpEntity.getCreationTime().plusMinutes(5).isBefore(LocalDateTime.now())) {
+            throw new JobPortalException("OTP_EXPIRED");
+        }
+
     }
-    
+
+    @Scheduled(fixedRate = 60000)
+    public void removeExpiredOTPs() {
+        LocalDateTime expiry = LocalDateTime.now().minusMinutes(5);
+
+        List<Otp> expiredOtps = otpRepository.findByCreationTimeBefore(expiry);
+
+        if (!expiredOtps.isEmpty()) {
+            otpRepository.deleteAll(expiredOtps);
+            System.out.println("Removed "+expiredOtps.size()+" expired OTPs.");
+        }
+    }
     
 }

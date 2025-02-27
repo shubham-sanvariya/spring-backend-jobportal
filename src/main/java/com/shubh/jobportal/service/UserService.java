@@ -14,4 +14,6 @@ public interface UserService {
     void sendOtp(String email) throws Exception;
 
     void verifyOTP(String email, String otp) throws Exception;
+
+    void removeExpiredOTPs();
 }
