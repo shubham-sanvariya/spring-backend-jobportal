@@ -1,5 +1,7 @@
 package com.shubh.jobportal.utitlity;
 
+import java.security.SecureRandom;
+
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -41,5 +43,14 @@ public class Utilities {
         }
 
         return seq.getSeq();
+    }
+
+    public static String generateOTP(){
+        StringBuilder otp = new StringBuilder();
+        SecureRandom random = new SecureRandom();
+        for (int i = 0; i < 6; i++) {
+            otp.append(random.nextInt(10));
+        }
+        return otp.toString();
     }
 }
