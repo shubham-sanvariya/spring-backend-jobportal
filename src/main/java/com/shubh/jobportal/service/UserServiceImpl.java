@@ -89,6 +89,7 @@ public class UserServiceImpl implements UserService{
 
     @Scheduled(fixedRate = 60000)
     public void removeExpiredOTPs() {
+        System.out.println("fetching expired list of otps.");
         LocalDateTime expiry = LocalDateTime.now().minusMinutes(5);
 
         List<Otp> expiredOtps = otpRepository.findByCreationTimeBefore(expiry);
@@ -98,5 +99,14 @@ public class UserServiceImpl implements UserService{
             System.out.println("Removed "+expiredOtps.size()+" expired OTPs.");
         }
     }
+
+    @Override
+    public void changePassword(LoginDTO resetDto) throws JobPortalException {
+       User user = userRepository.findByEmail(resetDto.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
+        
+       user.setPassword(passwordEncoder.encode(resetDto.getPassword()));
+        userRepository.save(user);
+    }
+    
     
 }

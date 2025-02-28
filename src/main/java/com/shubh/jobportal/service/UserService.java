@@ -16,4 +16,6 @@ public interface UserService {
     void verifyOTP(String email, String otp) throws Exception;
 
     void removeExpiredOTPs();
+
+    void changePassword(LoginDTO resetDto) throws JobPortalException;
 }
