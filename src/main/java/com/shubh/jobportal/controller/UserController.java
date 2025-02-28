@@ -52,4 +52,11 @@ public class UserController {
         return new ResponseEntity<>("OTP has been verified.",HttpStatus.OK);
     }
 
+
+    @PostMapping("/changePass")
+    public ResponseEntity<String> changePassword(@RequestBody @Valid LoginDTO resetDto)
+            throws JobPortalException {
+        userService.changePassword(resetDto);
+        return new ResponseEntity<>("Password Changed Successfully.", HttpStatus.OK);
+    }
 }
