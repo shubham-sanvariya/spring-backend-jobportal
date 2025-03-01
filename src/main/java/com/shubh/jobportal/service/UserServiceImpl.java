@@ -27,18 +27,20 @@ import lombok.RequiredArgsConstructor;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final OtpRepository otpRepository;
+    private final ProfileService profileService;
 
     private final PasswordEncoder passwordEncoder;
 
     private final JavaMailSender mailSender;
 
-    private final OtpRepository otpRepository;
 
     @Override
     public UserDTO registerUser(UserDTO userDTO) throws JobPortalException {
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new JobPortalException("USER_FOUND");
         }
+        userDTO.setProfileId(profileService.createProfile(userDTO.getEmail()));
         userDTO.setId(Utilities.getNextSequence("users"));
         userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         User user = userDTO.toEntity();
