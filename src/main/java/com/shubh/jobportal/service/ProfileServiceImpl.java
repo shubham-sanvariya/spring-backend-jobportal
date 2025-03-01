@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.springframework.stereotype.Service;
 
+import com.shubh.jobportal.dto.ProfileDTO;
 import com.shubh.jobportal.entity.Profile;
 import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.repo.ProfileRepository;
@@ -28,5 +29,12 @@ public class ProfileServiceImpl implements ProfileService{
         profileRepository.save(profile);
         return profile.getId();
     }
+
+    @Override
+    public ProfileDTO getProfile(Long id) throws JobPortalException {
+        Profile profile = profileRepository.findById(id).orElseThrow(() -> new JobPortalException("PROFILE_NOT_FOUND"));
+        return profile.toDTO();
+    }
+    
     
 }
