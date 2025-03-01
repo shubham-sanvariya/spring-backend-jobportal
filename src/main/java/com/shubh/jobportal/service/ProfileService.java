@@ -7,4 +7,6 @@ public interface ProfileService {
     long createProfile(String email) throws JobPortalException;
 
     ProfileDTO getProfile(Long id) throws JobPortalException;
+
+    ProfileDTO updateProfile(ProfileDTO profileDTO) throws JobPortalException;
 }
