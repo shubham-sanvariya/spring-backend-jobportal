@@ -20,10 +20,9 @@ import lombok.NoArgsConstructor;
 public class Profile {
     @Id
     private Long id;
-    private String email;
     private String jobTitle;
     private String company;
-    private String loacation;
+    private String location;
     private String about;
 
     private List<String > skills;
@@ -31,6 +30,6 @@ public class Profile {
     private List<Certificate> certificates;
 
     public ProfileDTO toDTO(){
-        return new ProfileDTO(this.id,this.email,this.jobTitle,this.company,this.loacation,this.about,this.skills,this.experiences,this.certificates);
+        return new ProfileDTO(this.id,this.jobTitle,this.company,this.location,this.about,this.skills,this.experiences,this.certificates);
     }
 }

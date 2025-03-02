@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class Certificate {
     private String title;
     private String issuer;
-    private LocalDateTime startDate;
+    private LocalDateTime issueDate;
     private String certificateId;
 }

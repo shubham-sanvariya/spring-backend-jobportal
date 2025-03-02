@@ -21,7 +21,7 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin
 @Validated
 @RequiredArgsConstructor
-@RequestMapping("/profile")
+@RequestMapping("/profiles")
 public class ProfileController {
     
     private final ProfileService profileService;
