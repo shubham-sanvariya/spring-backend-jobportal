@@ -1,5 +1,6 @@
 package com.shubh.jobportal.entity;
 
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -24,12 +25,12 @@ public class Profile {
     private String company;
     private String location;
     private String about;
-
+    private byte[] picture;
     private List<String > skills;
     private List<Experience> experiences;
     private List<Certificate> certificates;
 
     public ProfileDTO toDTO(){
-        return new ProfileDTO(this.id,this.jobTitle,this.company,this.location,this.about,this.skills,this.experiences,this.certificates);
+        return new ProfileDTO(this.id,this.jobTitle,this.company,this.location,this.about, this.picture != null ? Base64.getEncoder().encodeToString(this.picture) : null,this.skills,this.experiences,this.certificates);
     }
 }

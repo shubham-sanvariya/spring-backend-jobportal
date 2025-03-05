@@ -1,5 +1,6 @@
 package com.shubh.jobportal.dto;
 
+import java.util.Base64;
 import java.util.List;
 
 import com.shubh.jobportal.entity.Profile;
@@ -17,13 +18,13 @@ public class ProfileDTO {
     private String company;
     private String location;
     private String about;
-
+    private String picture;
     private List<String > skills;
     private List<Experience> experiences;
     private List<Certificate> certificates;
 
     public Profile toEntity() {
-        return new Profile(this.id, this.jobTitle, this.company, this.location, this.about, this.skills,
+        return new Profile(this.id, this.jobTitle, this.company, this.location, this.about, this.picture != null ? Base64.getDecoder().decode(this.picture) : null, this.skills,
                 this.experiences, this.certificates);
     }
 }
