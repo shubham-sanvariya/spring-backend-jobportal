@@ -8,6 +8,7 @@ import com.shubh.jobportal.enums.JobStatus;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,21 +24,22 @@ public class JobDTO {
     @Size(min = 4)
     private String company;
     private List<Applicant> applicants;
-    @Size(min = 50)
+    @Size(min = 30)
     private String about;
     @NotBlank
     private String experience;
     @NotBlank
     private String jobType;
-    @NotBlank
+    @Size(min = 4)
     private String location;
+    @NotNull
     private Long packageOffered;
     private LocalDateTime postTime;
     @Size(min = 50)
     private String description;
     @NotEmpty
     private List<String> skillRequired;
-    @NotEmpty
+    // @NotEmpty
     private JobStatus jobStatus;
 
     public Job toEntity() {
