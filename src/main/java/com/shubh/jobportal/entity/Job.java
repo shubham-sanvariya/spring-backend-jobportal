@@ -35,7 +35,7 @@ public class Job {
     private List<String> skillRequired;
     private JobStatus jobStatus;
 
-    public JobDTO toEntity() {
+    public JobDTO toDTO() {
         return new JobDTO(this.id, this.jobTitle, this.company, this.applicants, this.about, this.experience, this.jobType,
                 this.location, this.packageOffered, this.postTime, this.description, this.skillRequired,
                 this.jobStatus);
