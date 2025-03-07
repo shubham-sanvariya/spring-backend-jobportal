@@ -6,7 +6,6 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.shubh.jobportal.dto.ApplicantDTO;
 import com.shubh.jobportal.dto.JobDTO;
 import com.shubh.jobportal.enums.JobStatus;
 
