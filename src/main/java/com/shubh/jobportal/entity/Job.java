@@ -24,7 +24,7 @@ public class Job {
     private Long id;
     private String  jobTitle;
     private String company;
-    private List<ApplicantDTO> applicants;
+    private List<Applicant> applicants;
     private String about;
     private String experience;
     private String jobType;
@@ -36,7 +36,9 @@ public class Job {
     private JobStatus jobStatus;
 
     public JobDTO toDTO() {
-        return new JobDTO(this.id, this.jobTitle, this.company, this.applicants, this.about, this.experience, this.jobType,
+        return new JobDTO(this.id, this.jobTitle, this.company, 
+                this.applicants != null ? this.applicants.stream().map(x -> x.toDto()).toList()
+                        : null, this.about, this.experience, this.jobType,
                 this.location, this.packageOffered, this.postTime, this.description, this.skillRequired,
                 this.jobStatus);
     }

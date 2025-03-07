@@ -43,7 +43,7 @@ public class JobDTO {
     private JobStatus jobStatus;
 
     public Job toEntity() {
-        return new Job(this.id, this.jobTitle, this.company, this.applicants, this.about, this.experience, this.jobType,
+        return new Job(this.id, this.jobTitle, this.company, this.applicants != null ? this.applicants.stream().map(x -> x.toEntity()).toList() : null, this.about, this.experience, this.jobType,
                 this.location, this.packageOffered, this.postTime, this.description, this.skillRequired,
                 this.jobStatus);
     }
