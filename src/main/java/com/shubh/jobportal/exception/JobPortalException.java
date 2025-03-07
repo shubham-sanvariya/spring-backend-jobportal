@@ -1,6 +1,6 @@
 package com.shubh.jobportal.exception;
 
-public class JobPortalException extends Exception{
+public class JobPortalException extends RuntimeException{
     
     private static final long serialVersionUID = 1L;
 

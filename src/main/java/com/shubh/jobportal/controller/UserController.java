@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.shubh.jobportal.dto.LoginDTO;
 import com.shubh.jobportal.dto.UserDTO;
-import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.service.UserService;
 
 import jakarta.validation.Valid;
@@ -31,12 +30,12 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid UserDTO userDTO) throws JobPortalException{
+    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid UserDTO userDTO){
         return new ResponseEntity<>(userService.registerUser(userDTO),HttpStatus.CREATED);
     }
 
     @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody @Valid LoginDTO loginDTO) throws JobPortalException{
+    public ResponseEntity<UserDTO> loginUser(@RequestBody @Valid LoginDTO loginDTO){
         return new ResponseEntity<>(userService.loginUser(loginDTO),HttpStatus.OK);
     }
 
@@ -55,7 +54,7 @@ public class UserController {
 
     @PostMapping("/changePass")
     public ResponseEntity<String> changePassword(@RequestBody @Valid LoginDTO resetDto)
-            throws JobPortalException {
+         {
         userService.changePassword(resetDto);
         return new ResponseEntity<>("Password Changed Successfully.", HttpStatus.OK);
     }

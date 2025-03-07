@@ -36,7 +36,7 @@ public class UserServiceImpl implements UserService{
 
 
     @Override
-    public UserDTO registerUser(UserDTO userDTO) throws JobPortalException {
+    public UserDTO registerUser(UserDTO userDTO) {
         if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
             throw new JobPortalException("USER_FOUND");
         }
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO loginUser(LoginDTO loginDTO) throws JobPortalException {
+    public UserDTO loginUser(LoginDTO loginDTO) {
         User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
 
         if (!passwordEncoder.matches(loginDTO.getPassword(),user.getPassword())) {
@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void changePassword(LoginDTO resetDto) throws JobPortalException {
+    public void changePassword(LoginDTO resetDto) {
        User user = userRepository.findByEmail(resetDto.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
         
        user.setPassword(passwordEncoder.encode(resetDto.getPassword()));

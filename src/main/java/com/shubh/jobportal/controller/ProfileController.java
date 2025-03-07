@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shubh.jobportal.dto.ProfileDTO;
-import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.service.ProfileService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,12 +26,12 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProfileDTO> getProfileById(@PathVariable Long id) throws JobPortalException{
+    public ResponseEntity<ProfileDTO> getProfileById(@PathVariable Long id){
         return new ResponseEntity<ProfileDTO>(profileService.getProfile(id),HttpStatus.OK);
     }
 
     @PutMapping("/update")
-    public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profileDTO) throws JobPortalException{
+    public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profileDTO){
         return new ResponseEntity<ProfileDTO>(profileService.updateProfile(profileDTO),HttpStatus.OK);
     }
 }

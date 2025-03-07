@@ -2,14 +2,13 @@ package com.shubh.jobportal.service;
 
 import com.shubh.jobportal.dto.LoginDTO;
 import com.shubh.jobportal.dto.UserDTO;
-import com.shubh.jobportal.exception.JobPortalException;
 
 
 public interface UserService {
 
-    UserDTO loginUser(LoginDTO loginDTO) throws JobPortalException;
+    UserDTO loginUser(LoginDTO loginDTO);
 
-    UserDTO registerUser(UserDTO userDTO) throws JobPortalException;
+    UserDTO registerUser(UserDTO userDTO);
 
     void sendOtp(String email) throws Exception;
 
@@ -17,5 +16,5 @@ public interface UserService {
 
     void removeExpiredOTPs();
 
-    void changePassword(LoginDTO resetDto) throws JobPortalException;
+    void changePassword(LoginDTO resetDto);
 }

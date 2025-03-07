@@ -1,12 +1,11 @@
 package com.shubh.jobportal.service;
 
 import com.shubh.jobportal.dto.ProfileDTO;
-import com.shubh.jobportal.exception.JobPortalException;
 
 public interface ProfileService {
-    long createProfile(String email) throws JobPortalException;
+    long createProfile(String email);
 
-    ProfileDTO getProfile(Long id) throws JobPortalException;
+    ProfileDTO getProfile(Long id);
 
-    ProfileDTO updateProfile(ProfileDTO profileDTO) throws JobPortalException;
+    ProfileDTO updateProfile(ProfileDTO profileDTO);
 }

@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shubh.jobportal.dto.JobDTO;
-import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.service.JobService;
 
 import jakarta.validation.Valid;
@@ -30,17 +29,17 @@ public class JobController {
     private final JobService jobService;
 
     @PostMapping("/post")
-    public ResponseEntity<JobDTO> postJob(@RequestBody @Valid JobDTO jobDTO) throws JobPortalException{
+    public ResponseEntity<JobDTO> postJob(@RequestBody @Valid JobDTO jobDTO){
         return new ResponseEntity<JobDTO>(jobService.postJob(jobDTO),HttpStatus.CREATED);
     }
 
     @GetMapping
-    public ResponseEntity<List<JobDTO>> getAllJobs() throws JobPortalException{
+    public ResponseEntity<List<JobDTO>> getAllJobs(){
         return new ResponseEntity<List<JobDTO>>(jobService.getAllJobs(),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<JobDTO> getJobById(@PathVariable Long id) throws JobPortalException{
+    public ResponseEntity<JobDTO> getJobById(@PathVariable Long id){
         return new ResponseEntity<JobDTO>(jobService.getJobById(id),HttpStatus.OK);
     }
 }

@@ -19,7 +19,7 @@ public class ProfileServiceImpl implements ProfileService{
     private final ProfileRepository profileRepository;
 
     @Override
-    public long createProfile(String email) throws JobPortalException {
+    public long createProfile(String email) {
         Profile profile = new Profile();
         profile.setId(Utilities.getNextSequence("profiles"));
         profile.setSkills(new ArrayList<>());
@@ -30,12 +30,12 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
-    public ProfileDTO getProfile(Long id) throws JobPortalException {
+    public ProfileDTO getProfile(Long id) {
         return profileRepository.findById(id).orElseThrow(() -> new JobPortalException("PROFILE_NOT_FOUND")).toDTO();
     }
 
     @Override
-    public ProfileDTO updateProfile(ProfileDTO profileDTO) throws JobPortalException {
+    public ProfileDTO updateProfile(ProfileDTO profileDTO) {
         profileRepository.findById(profileDTO.getId()).orElseThrow(() -> new JobPortalException("PROFILE_NOT_FOUND"));
         profileRepository.save(profileDTO.toEntity());
         return profileDTO;

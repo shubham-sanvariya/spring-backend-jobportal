@@ -19,19 +19,19 @@ public class JobServiceImpl implements JobService{
      private final JobRepository jobRepository;
 
     @Override
-    public JobDTO postJob(JobDTO jobDTO) throws JobPortalException {
+    public JobDTO postJob(JobDTO jobDTO) {
         jobDTO.setId(Utilities.getNextSequence("jobs"));
         jobDTO.setPostTime(LocalDateTime.now());
         return jobRepository.save(jobDTO.toEntity()).toDTO();
     }
 
     @Override
-    public List<JobDTO> getAllJobs() throws JobPortalException {
+    public List<JobDTO> getAllJobs() {
         return jobRepository.findAll().stream().map(job -> job.toDTO()).collect(Collectors.toList());
     }
 
     @Override
-    public JobDTO getJobById(Long id) throws JobPortalException {
+    public JobDTO getJobById(Long id) {
        return jobRepository.findById(id).orElseThrow(() -> new JobPortalException("{JOB_NOT_FOUND}")).toDTO();
     }
 
