@@ -23,7 +23,7 @@ public class JobDTO {
     private String jobTitle;
     @Size(min = 4)
     private String company;
-    private List<Applicant> applicants;
+    private List<ApplicantDTO> applicants;
     @Size(min = 30)
     private String about;
     @NotBlank

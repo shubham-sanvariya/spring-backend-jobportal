@@ -6,7 +6,7 @@ import java.util.List;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import com.shubh.jobportal.dto.Applicant;
+import com.shubh.jobportal.dto.ApplicantDTO;
 import com.shubh.jobportal.dto.JobDTO;
 import com.shubh.jobportal.enums.JobStatus;
 
@@ -24,7 +24,7 @@ public class Job {
     private Long id;
     private String  jobTitle;
     private String company;
-    private List<Applicant> applicants;
+    private List<ApplicantDTO> applicants;
     private String about;
     private String experience;
     private String jobType;
