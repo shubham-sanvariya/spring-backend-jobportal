@@ -37,12 +37,12 @@ public class JobServiceImpl implements JobService{
 
     @Override
     public JobDTO getJobById(Long id) {
-       return jobRepository.findById(id).orElseThrow(() -> new JobPortalException("{JOB_NOT_FOUND}")).toDTO();
+       return jobRepository.findById(id).orElseThrow(() -> new JobPortalException("JOB_NOT_FOUND")).toDTO();
     }
 
     @Override
     public void applyJob(Long id, ApplicantDTO applicantDTO) {
-        Job job = jobRepository.findById(id).orElseThrow(() -> new JobPortalException("{JOB_NOT_FOUND}"));
+        Job job = jobRepository.findById(id).orElseThrow(() -> new JobPortalException("JOB_NOT_FOUND"));
 
         List<Applicant> applicants = job.getApplicants();
         if (applicants == null) {
@@ -51,12 +51,12 @@ public class JobServiceImpl implements JobService{
         boolean alreadyApplied = applicants.stream().anyMatch(app -> app.getApplicantId().equals(applicantDTO.getApplicantId()));
 
         if (alreadyApplied) {
-            throw new JobPortalException("{JOB_APPLIED_ALREADY}");
+            throw new JobPortalException("JOB_APPLIED_ALREADY");
         }
 
         applicantDTO.setApplicationStatus(ApplicationStatus.APPLIED);
         applicants.add(applicantDTO.toEntity());
-        
+
         job.setApplicants(applicants);
         jobRepository.save(job);
     }
