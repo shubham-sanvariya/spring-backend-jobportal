@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shubh.jobportal.dto.ApplicantDTO;
 import com.shubh.jobportal.dto.JobDTO;
 import com.shubh.jobportal.service.JobService;
 
@@ -41,5 +42,11 @@ public class JobController {
     @GetMapping("/{id}")
     public ResponseEntity<JobDTO> getJobById(@PathVariable Long id){
         return new ResponseEntity<JobDTO>(jobService.getJobById(id),HttpStatus.OK);
+    }
+
+    @PostMapping("/apply/{id}")
+    public ResponseEntity<String> applyJob(@PathVariable Long id, @RequestBody @Valid ApplicantDTO applicantDTO){
+        jobService.applyJob(id,applicantDTO);
+        return new ResponseEntity<String>("Applied Successfully",HttpStatus.OK);
     }
 }
