@@ -1,6 +1,7 @@
 package com.shubh.jobportal.service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
@@ -40,6 +41,16 @@ public class ProfileServiceImpl implements ProfileService{
         profileRepository.save(profileDTO.toEntity());
         return profileDTO;
     }
+
+    @Override
+    public ProfileDTO updateProfileSavedJobs(Long profileId, List<Long> jobIds) {
+        Profile profile =  profileRepository.findById(profileId).orElseThrow(() -> new JobPortalException("PROFILE_NOT_FOUND"));
+
+        profile.setSavedJobs(jobIds);
+
+       return profileRepository.save(profile).toDTO();
+    }
+    
     
     
 }
