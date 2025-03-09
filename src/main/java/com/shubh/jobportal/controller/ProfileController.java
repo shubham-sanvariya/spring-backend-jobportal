@@ -1,10 +1,13 @@
 package com.shubh.jobportal.controller;
 
+import java.util.List;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -33,5 +36,10 @@ public class ProfileController {
     @PutMapping("/update")
     public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profileDTO){
         return new ResponseEntity<ProfileDTO>(profileService.updateProfile(profileDTO),HttpStatus.OK);
+    }
+
+    @PatchMapping("/update/saved-jobs/{profileId}")
+    public ResponseEntity<ProfileDTO> updateProfileSavedJobs(@PathVariable Long profileId, @RequestBody List<Long> jobIds){
+        return new ResponseEntity<ProfileDTO>(profileService.updateProfileSavedJobs(profileId,jobIds), HttpStatus.OK);
     }
 }
