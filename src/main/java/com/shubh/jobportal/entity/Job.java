@@ -33,12 +33,13 @@ public class Job {
     private String description;
     private List<String> skillRequired;
     private JobStatus jobStatus;
+    private Long postedBy;
 
     public JobDTO toDTO() {
         return new JobDTO(this.id, this.jobTitle, this.company, 
                 this.applicants != null ? this.applicants.stream().map(x -> x.toDto()).toList()
                         : null, this.about, this.experience, this.jobType,
                 this.location, this.packageOffered, this.postTime, this.description, this.skillRequired,
-                this.jobStatus);
+                this.jobStatus,this.postedBy);
     }
 }
