@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.dto.ApplicantDTO;
+import com.shubh.jobportal.dto.ApplicationDTO;
 import com.shubh.jobportal.dto.JobDTO;
 import com.shubh.jobportal.entity.Applicant;
 import com.shubh.jobportal.entity.Job;
@@ -36,13 +37,19 @@ public class JobServiceImpl implements JobService{
     }
 
     @Override
-    public JobDTO getJobById(Long id) {
-       return jobRepository.findById(id).orElseThrow(() -> new JobPortalException("JOB_NOT_FOUND")).toDTO();
+    public Job getJobById(Long id) {
+        return jobRepository.findById(id)
+                .orElseThrow(() -> new JobPortalException("JOB_NOT_FOUND"));
+    }
+
+    public JobDTO getJobDTOById(Long id) {
+        Job job = getJobById(id);
+        return job.toDTO();
     }
 
     @Override
     public void applyJob(Long id, ApplicantDTO applicantDTO) {
-        Job job = jobRepository.findById(id).orElseThrow(() -> new JobPortalException("JOB_NOT_FOUND"));
+        Job job = getJobById(id);
 
         List<Applicant> applicants = job.getApplicants();
         if (applicants == null) {
@@ -58,6 +65,26 @@ public class JobServiceImpl implements JobService{
         applicants.add(applicantDTO.toEntity());
 
         job.setApplicants(applicants);
+        jobRepository.save(job);
+    }
+
+    @Override
+    public void changeApplicationStatus(ApplicationDTO applicationDTO) {
+        Job job = getJobById(applicationDTO.getId());
+
+        List<Applicant> applicants = job.getApplicants().stream().map(applicant -> {
+            if (applicant.getApplicantId() == applicationDTO.getApplicantId()) {
+                applicant.setApplicationStatus(applicationDTO.getApplicationStatus());
+                if (applicant.getApplicationStatus().equals(ApplicationStatus.INTERVIEWING)) {
+                    applicant.setInterviewTime(applicationDTO.getInterviewTime());
+                }
+            }
+
+            return applicant;
+        }).collect(Collectors.toList());
+
+        job.setApplicants(applicants);
+
         jobRepository.save(job);
     }
 
