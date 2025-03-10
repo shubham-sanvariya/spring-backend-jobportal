@@ -46,6 +46,11 @@ public class JobController {
         return new ResponseEntity<JobDTO>(jobService.getJobDTOById(id),HttpStatus.OK);
     }
 
+    @GetMapping("/posted-by/{id}")
+    public ResponseEntity<List<JobDTO>> getJobsByPostedBy(@PathVariable Long id){
+        return new ResponseEntity<List<JobDTO>>(jobService.getJobsByPostedBy(id),HttpStatus.OK);
+    }
+
     @PostMapping("/apply/{id}")
     public ResponseEntity<String> applyJob(@PathVariable Long id, @RequestBody @Valid ApplicantDTO applicantDTO){
         jobService.applyJob(id,applicantDTO);
