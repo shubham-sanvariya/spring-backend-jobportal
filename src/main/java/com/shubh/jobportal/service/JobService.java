@@ -19,4 +19,6 @@ public interface JobService {
     void applyJob(Long id, ApplicantDTO applicantDTO);
 
     void changeApplicationStatus(ApplicationDTO applicationDTO);
+
+    List<JobDTO> getJobsByPostedBy(Long id);
 }

@@ -88,5 +88,8 @@ public class JobServiceImpl implements JobService{
         jobRepository.save(job);
     }
 
-     
+    @Override
+    public List<JobDTO> getJobsByPostedBy(Long id) {
+        return jobRepository.findByPostedBy(id).stream().map(job -> job.toDTO()).collect(Collectors.toList());
+    }
 }
