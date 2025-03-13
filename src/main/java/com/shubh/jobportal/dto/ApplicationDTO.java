@@ -4,7 +4,7 @@ import java.time.LocalDateTime;
 
 import com.shubh.jobportal.enums.ApplicationStatus;
 
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,13 +13,13 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApplicationDTO {
-    @NotBlank
+    @NotNull
     private Long id;
-    @NotBlank
+    @NotNull
     private Long applicantId;
 
     private LocalDateTime interviewTime;
 
-    @NotBlank
+    @NotNull
     private ApplicationStatus applicationStatus;
 }
