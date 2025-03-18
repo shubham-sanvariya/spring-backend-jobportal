@@ -12,4 +12,6 @@ public interface ProfileService {
     ProfileDTO updateProfile(ProfileDTO profileDTO);
 
     ProfileDTO updateProfileSavedJobs(Long profileId, List<Long> jobIds);
+
+    List<ProfileDTO> getAllProfileDTOs();
 }

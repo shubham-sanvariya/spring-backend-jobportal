@@ -2,6 +2,7 @@ package com.shubh.jobportal.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -49,6 +50,11 @@ public class ProfileServiceImpl implements ProfileService{
         profile.setSavedJobs(jobIds);
 
        return profileRepository.save(profile).toDTO();
+    }
+
+    @Override
+    public List<ProfileDTO> getAllProfileDTOs() {
+        return profileRepository.findAll().stream().map(profile -> profile.toDTO()).collect(Collectors.toList());
     }
     
     
