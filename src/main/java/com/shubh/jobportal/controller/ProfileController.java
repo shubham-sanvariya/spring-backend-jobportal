@@ -33,6 +33,11 @@ public class ProfileController {
         return new ResponseEntity<ProfileDTO>(profileService.getProfile(id),HttpStatus.OK);
     }
 
+    @GetMapping
+    public ResponseEntity<List<ProfileDTO>> getAllProfiles(){
+        return new ResponseEntity<List<ProfileDTO>>(profileService.getAllProfileDTOs(),HttpStatus.OK);
+    }
+
     @PutMapping("/update")
     public ResponseEntity<ProfileDTO> updateProfile(@RequestBody ProfileDTO profileDTO){
         return new ResponseEntity<ProfileDTO>(profileService.updateProfile(profileDTO),HttpStatus.OK);
