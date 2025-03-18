@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ProfileDTO {
     private Long id;
+    private String name;
     private String jobTitle;
     private String company;
     private String location;
@@ -25,7 +26,7 @@ public class ProfileDTO {
     private List<Long> savedJobs;
 
     public Profile toEntity() {
-        return new Profile(this.id, this.jobTitle, this.company, this.location, this.about, this.picture != null ? Base64.getDecoder().decode(this.picture) : null, this.skills,
+        return new Profile(this.id, this.name ,this.jobTitle, this.company, this.location, this.about, this.picture != null ? Base64.getDecoder().decode(this.picture) : null, this.skills,
                 this.experiences, this.certificates, this.savedJobs);
     }
 }
