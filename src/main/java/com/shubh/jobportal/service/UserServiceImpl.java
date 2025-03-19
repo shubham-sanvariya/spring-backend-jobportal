@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -108,6 +109,15 @@ public class UserServiceImpl implements UserService{
         
        user.setPassword(passwordEncoder.encode(resetDto.getPassword()));
         userRepository.save(user);
+    }
+
+    @Override
+    public UserDTO updateUserName(Long id, String updatedName) {
+        UserDTO userdDto = userRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("user not found by user id.")).toDTO();
+        
+        userdDto.setName(updatedName);
+
+        return userRepository.save(userdDto.toEntity()).toDTO();
     }
     
     
