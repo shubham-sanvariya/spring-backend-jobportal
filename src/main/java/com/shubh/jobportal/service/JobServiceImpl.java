@@ -22,8 +22,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service("jobService")
 @RequiredArgsConstructor
-public class JobServiceImpl implements JobService{
-     private final JobRepository jobRepository;
+public class JobServiceImpl implements JobService {
+    private final JobRepository jobRepository;
 
     @Override
     public JobDTO postJob(JobDTO jobDTO) {
@@ -56,7 +56,8 @@ public class JobServiceImpl implements JobService{
         if (applicants == null) {
             applicants = new ArrayList<>();
         }
-        boolean alreadyApplied = applicants.stream().anyMatch(app -> app.getApplicantId().equals(applicantDTO.getApplicantId()));
+        boolean alreadyApplied = applicants.stream()
+                .anyMatch(app -> app.getApplicantId().equals(applicantDTO.getApplicantId()));
 
         if (alreadyApplied) {
             throw new JobPortalException("JOB_APPLIED_ALREADY");
@@ -96,19 +97,19 @@ public class JobServiceImpl implements JobService{
 
     @Override
     public void updateJobStatus(Long jobId, String jobStatus) {
-       Job job = getJobById(jobId);
+        Job job = getJobById(jobId);
 
-       if (jobStatus.equalsIgnoreCase(JobStatus.CLOSED.toString())) {
-        job.setJobStatus(JobStatus.CLOSED);
-       }else if (jobStatus.equalsIgnoreCase(JobStatus.DRAFT.toString())) {
-           job.setJobStatus(JobStatus.DRAFT);
-       }else{
+        if (jobStatus.equalsIgnoreCase(JobStatus.CLOSED.toString())) {
+            job.setJobStatus(JobStatus.CLOSED);
+        } else if (jobStatus.equalsIgnoreCase(JobStatus.DRAFT.toString())) {
+            job.setJobStatus(JobStatus.DRAFT);
+        } else {
+            job.setPostTime(LocalDateTime.now());
             job.setJobStatus(JobStatus.ACTIVE);
-       }
+        }
 
-       jobRepository.save(job);
-        
+        jobRepository.save(job);
+
     }
 
-    
 }
