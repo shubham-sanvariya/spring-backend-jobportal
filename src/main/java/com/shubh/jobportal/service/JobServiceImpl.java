@@ -13,6 +13,7 @@ import com.shubh.jobportal.dto.JobDTO;
 import com.shubh.jobportal.entity.Applicant;
 import com.shubh.jobportal.entity.Job;
 import com.shubh.jobportal.enums.ApplicationStatus;
+import com.shubh.jobportal.enums.JobStatus;
 import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.repo.JobRepository;
 import com.shubh.jobportal.utitlity.Utilities;
@@ -92,4 +93,22 @@ public class JobServiceImpl implements JobService{
     public List<JobDTO> getJobsByPostedBy(Long id) {
         return jobRepository.findByPostedBy(id).stream().map(job -> job.toDTO()).collect(Collectors.toList());
     }
+
+    @Override
+    public void updateJobStatus(Long jobId, String jobStatus) {
+       Job job = getJobById(jobId);
+
+       if (jobStatus.equalsIgnoreCase(JobStatus.CLOSED.toString())) {
+        job.setJobStatus(JobStatus.CLOSED);
+       }else if (jobStatus.equalsIgnoreCase(JobStatus.DRAFT.toString())) {
+           job.setJobStatus(JobStatus.DRAFT);
+       }else{
+            job.setJobStatus(JobStatus.ACTIVE);
+       }
+
+       jobRepository.save(job);
+        
+    }
+
+    
 }
