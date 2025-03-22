@@ -26,6 +26,7 @@ public class Profile {
     private String company;
     private String location;
     private String about;
+    private Byte totalExperience;
     private byte[] picture;
     private List<String > skills;
     private List<Experience> experiences;
@@ -33,6 +34,6 @@ public class Profile {
     private List<Long> savedJobs;
 
     public ProfileDTO toDTO(){
-        return new ProfileDTO(this.id, this.name,this.jobTitle,this.company,this.location,this.about, this.picture != null ? Base64.getEncoder().encodeToString(this.picture) : null,this.skills,this.experiences,this.certificates,this.savedJobs);
+        return new ProfileDTO(this.id, this.name,this.jobTitle,this.company,this.location,this.about, this.picture != null ? Base64.getEncoder().encodeToString(this.picture) : null,this.totalExperience,this.skills,this.experiences,this.certificates,this.savedJobs);
     }
 }

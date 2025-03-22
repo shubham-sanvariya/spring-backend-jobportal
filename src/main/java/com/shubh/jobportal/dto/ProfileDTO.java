@@ -20,13 +20,16 @@ public class ProfileDTO {
     private String location;
     private String about;
     private String picture;
+    private Byte totalExperience;
     private List<String > skills;
     private List<Experience> experiences;
     private List<Certificate> certificates;
     private List<Long> savedJobs;
 
     public Profile toEntity() {
-        return new Profile(this.id, this.name ,this.jobTitle, this.company, this.location, this.about, this.picture != null ? Base64.getDecoder().decode(this.picture) : null, this.skills,
+        byte[] pictureBytes = this.picture != null ? Base64.getDecoder().decode(this.picture) : null;
+        return new Profile(this.id, this.name, this.jobTitle, this.company, this.location, this.about,
+                this.totalExperience, pictureBytes, this.skills,
                 this.experiences, this.certificates, this.savedJobs);
     }
 }
