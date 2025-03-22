@@ -112,4 +112,13 @@ public class JobServiceImpl implements JobService {
 
     }
 
+    @Override
+    public JobDTO updateJob(JobDTO jobDTO) {
+        Job job = getJobById(jobDTO.getId());
+        job = jobDTO.toEntity();
+
+        return jobRepository.save(job).toDTO();
+    }
+
+    
 }
