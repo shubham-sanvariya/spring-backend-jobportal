@@ -27,7 +27,9 @@ public class JobServiceImpl implements JobService {
 
     @Override
     public JobDTO postJob(JobDTO jobDTO) {
-        jobDTO.setId(Utilities.getNextSequence("jobs"));
+        if (jobDTO.getId() == 0) {
+            jobDTO.setId(Utilities.getNextSequence("jobs"));
+        } 
         jobDTO.setPostTime(LocalDateTime.now());
         return jobRepository.save(jobDTO.toEntity()).toDTO();
     }
@@ -112,13 +114,4 @@ public class JobServiceImpl implements JobService {
 
     }
 
-    @Override
-    public JobDTO updateJob(JobDTO jobDTO) {
-        Job job = getJobById(jobDTO.getId());
-        job = jobDTO.toEntity();
-
-        return jobRepository.save(job).toDTO();
-    }
-
-    
 }

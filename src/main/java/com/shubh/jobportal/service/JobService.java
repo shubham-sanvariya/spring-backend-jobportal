@@ -22,7 +22,5 @@ public interface JobService {
 
     void updateJobStatus(Long jobId, String jobStatus);
 
-    JobDTO updateJob(JobDTO jobDTO);
-
     List<JobDTO> getJobsByPostedBy(Long id);
 }
