@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shubh.jobportal.dto.ApplicantDTO;
 import com.shubh.jobportal.dto.ApplicationDTO;
 import com.shubh.jobportal.dto.JobDTO;
+import com.shubh.jobportal.dto.PaginatedResponse;
 import com.shubh.jobportal.enums.JobStatus;
 import com.shubh.jobportal.service.JobService;
 
@@ -42,9 +43,9 @@ public class JobController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<JobDTO>> getAllJobs(@RequestParam(required = false) JobStatus jobStatus, Pageable pageable){
+    public ResponseEntity<PaginatedResponse<JobDTO>> getAllJobs(@RequestParam(required = false) JobStatus jobStatus, Pageable pageable){
         Page<JobDTO> jobs = (jobStatus == null) ? jobService.getAllJobs(pageable) : jobService.getJobsByJobStatus(jobStatus,pageable);
-        return new ResponseEntity<Page<JobDTO>>(jobs,HttpStatus.OK);
+        return new ResponseEntity<PaginatedResponse<JobDTO>>(PaginatedResponse.fromPage(jobs),HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
