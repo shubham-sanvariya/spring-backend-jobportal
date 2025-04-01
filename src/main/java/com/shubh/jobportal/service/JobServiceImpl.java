@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.dto.ApplicantDTO;
@@ -35,8 +37,8 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public List<JobDTO> getAllJobs() {
-        return jobRepository.findAll().stream().map(job -> job.toDTO()).collect(Collectors.toList());
+    public Page<JobDTO> getAllJobs(Pageable pageable) {
+        return jobRepository.findAll(pageable).map(Job::toDTO);
     }
 
     @Override
@@ -112,6 +114,14 @@ public class JobServiceImpl implements JobService {
 
         jobRepository.save(job);
 
+    }
+
+    @Override
+    public Page<JobDTO> getJobsByJobStatus(JobStatus jobStatus, Pageable pageable) {
+        if (jobStatus == null) {
+            throw new JobPortalException("job status is null");
+        }
+        return jobRepository.findByJobStatus(jobStatus,pageable).map(Job::toDTO);
     }
 
 }
