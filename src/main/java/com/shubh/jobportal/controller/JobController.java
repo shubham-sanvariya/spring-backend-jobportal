@@ -2,6 +2,8 @@ package com.shubh.jobportal.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -19,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.shubh.jobportal.dto.ApplicantDTO;
 import com.shubh.jobportal.dto.ApplicationDTO;
 import com.shubh.jobportal.dto.JobDTO;
+import com.shubh.jobportal.enums.JobStatus;
 import com.shubh.jobportal.service.JobService;
 
 import jakarta.validation.Valid;
@@ -39,8 +42,9 @@ public class JobController {
     }
 
     @GetMapping
-    public ResponseEntity<List<JobDTO>> getAllJobs(){
-        return new ResponseEntity<List<JobDTO>>(jobService.getAllJobs(),HttpStatus.OK);
+    public ResponseEntity<Page<JobDTO>> getAllJobs(@RequestParam(required = false) JobStatus jobStatus, Pageable pageable){
+        Page<JobDTO> jobs = (jobStatus == null) ? jobService.getAllJobs(pageable) : jobService.getJobsByJobStatus(jobStatus,pageable);
+        return new ResponseEntity<Page<JobDTO>>(jobs,HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
