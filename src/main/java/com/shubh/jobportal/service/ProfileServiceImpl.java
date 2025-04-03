@@ -2,8 +2,8 @@ package com.shubh.jobportal.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.dto.ProfileDTO;
@@ -53,8 +53,8 @@ public class ProfileServiceImpl implements ProfileService{
     }
 
     @Override
-    public List<ProfileDTO> getAllProfileDTOs() {
-        return profileRepository.findAll().stream().map(profile -> profile.toDTO()).collect(Collectors.toList());
+    public Page<ProfileDTO> getAllProfileDTOs(Pageable pageable) {
+        return profileRepository.findAll(pageable).map(Profile::toDTO);
     }
     
     

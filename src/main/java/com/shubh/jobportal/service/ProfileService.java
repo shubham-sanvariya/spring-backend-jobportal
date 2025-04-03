@@ -2,6 +2,9 @@ package com.shubh.jobportal.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.shubh.jobportal.dto.ProfileDTO;
 
 public interface ProfileService {
@@ -13,5 +16,5 @@ public interface ProfileService {
 
     ProfileDTO updateProfileSavedJobs(Long profileId, List<Long> jobIds);
 
-    List<ProfileDTO> getAllProfileDTOs();
+    Page<ProfileDTO> getAllProfileDTOs(Pageable pageable);
 }

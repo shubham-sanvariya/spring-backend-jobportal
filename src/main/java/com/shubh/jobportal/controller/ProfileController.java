@@ -2,6 +2,8 @@ package com.shubh.jobportal.controller;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.shubh.jobportal.dto.PaginatedResponse;
 import com.shubh.jobportal.dto.ProfileDTO;
 import com.shubh.jobportal.service.ProfileService;
 
@@ -34,8 +37,9 @@ public class ProfileController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ProfileDTO>> getAllProfiles(){
-        return new ResponseEntity<List<ProfileDTO>>(profileService.getAllProfileDTOs(),HttpStatus.OK);
+    public ResponseEntity<PaginatedResponse<ProfileDTO>> getAllProfiles(Pageable pageable){
+        Page<ProfileDTO> profiles = profileService.getAllProfileDTOs(pageable);
+        return new ResponseEntity<PaginatedResponse<ProfileDTO>>(PaginatedResponse.fromPage(profiles),HttpStatus.OK);
     }
 
     @PutMapping("/update")
