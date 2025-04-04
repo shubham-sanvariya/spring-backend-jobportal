@@ -1,5 +1,6 @@
 package com.shubh.jobportal.jwt;
 
+import java.util.Date;
 import java.util.function.Function;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -31,5 +32,9 @@ public class JwtHelper {
 
     public String getUsernameOrEmailFromToken(String token){
         return getClaimsFromToken(token, Claims::getSubject);
+    }
+
+    public Date getExpirationDateFromToken(String token){
+        return getClaimsFromToken(token,Claims::getExpiration);
     }
 }
