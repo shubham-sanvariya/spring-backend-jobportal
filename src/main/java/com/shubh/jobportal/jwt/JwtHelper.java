@@ -1,5 +1,7 @@
 package com.shubh.jobportal.jwt;
 
+import java.util.function.Function;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -20,5 +22,10 @@ public class JwtHelper {
                     .setSigningKey(SECRET_KEY.getBytes())
                     .build().parseClaimsJws(token)
                     .getBody();
+    }
+
+    public <T> T getClaimsFromToken(String token, Function<Claims, T> claimsResolver){
+        final Claims claims = getAllClaimsFromToken(token);
+        return claimsResolver.apply(claims);
     }
 }
