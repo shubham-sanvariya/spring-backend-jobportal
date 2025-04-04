@@ -48,4 +48,18 @@ public class JwtHelper {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
+
+    public String generateToken(String usernameOrEmail) {
+        Map<String, Object> claims = new HashMap<>();
+
+        Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .setSubject(usernameOrEmail)
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() * JWT_TOKEN_VALIDITY))
+                .signWith(key)
+                .compact();
+    }
 }
