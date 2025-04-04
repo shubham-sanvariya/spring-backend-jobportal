@@ -1,4 +1,4 @@
-package com.shubh.jobportal.jwt;
+package com.shubh.jobportal.security.jwt;
 
 import java.security.Key;
 import java.util.Date;
