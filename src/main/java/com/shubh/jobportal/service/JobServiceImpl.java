@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.shubh.jobportal.dto.ApplicantDTO;
 import com.shubh.jobportal.dto.ApplicationDTO;
 import com.shubh.jobportal.dto.JobDTO;
+import com.shubh.jobportal.dto.NotificationDTO;
 import com.shubh.jobportal.entity.Applicant;
 import com.shubh.jobportal.entity.Job;
 import com.shubh.jobportal.enums.ApplicationStatus;
@@ -26,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JobServiceImpl implements JobService {
     private final JobRepository jobRepository;
+    private final NotificationService notificationService;
 
     @Override
     public JobDTO postJob(JobDTO jobDTO) {
@@ -83,6 +85,16 @@ public class JobServiceImpl implements JobService {
                 applicant.setApplicationStatus(applicationDTO.getApplicationStatus());
                 if (applicant.getApplicationStatus().equals(ApplicationStatus.INTERVIEWING)) {
                     applicant.setInterviewTime(applicationDTO.getInterviewTime());
+
+                    NotificationDTO notificationDTO = new NotificationDTO();
+
+                    notificationDTO.setUserId(applicant.getApplicantId());
+                    notificationDTO.setAction("Interview Scheduled");
+                    notificationDTO.setMessage("Interview scheduled for job id: " + applicant.getApplicantId());
+                    notificationDTO.setTimeStamp(LocalDateTime.now());
+                    notificationDTO.setRoute("/job-history");
+                    
+                    notificationService.sendNotification(notificationDTO);
                 }
             }
 
