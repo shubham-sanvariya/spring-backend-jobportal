@@ -9,4 +9,6 @@ public interface NotificationService {
     void sendNotification(NotificationDTO notificationDTO);
 
     List<Notification> getUnreadNotification(Long userId);
+
+    void readNotification (Long id);
 }

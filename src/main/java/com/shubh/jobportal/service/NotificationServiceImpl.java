@@ -3,6 +3,7 @@ package com.shubh.jobportal.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.dto.NotificationDTO;
@@ -32,5 +33,12 @@ public class NotificationServiceImpl implements NotificationService{
         return repository.findByUserIdAndStatus(userId,NotificationStatus.UNREAD);
     }
 
-     
+    @Override
+    public void readNotification(Long id) {
+        Notification notification = repository.findById(id).orElseThrow(() -> new UsernameNotFoundException("notification not found by the given id: "+ id));
+
+        notification.setStatus(NotificationStatus.READ);
+
+        repository.save(notification);
+    }
 }
