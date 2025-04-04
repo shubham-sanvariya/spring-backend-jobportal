@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.dto.LoginDTO;
+import com.shubh.jobportal.dto.NotificationDTO;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.entity.Otp;
 import com.shubh.jobportal.entity.User;
@@ -30,6 +31,7 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final OtpRepository otpRepository;
     private final ProfileService profileService;
+    private final NotificationService notificationService;
 
     private final PasswordEncoder passwordEncoder;
 
@@ -106,7 +108,13 @@ public class UserServiceImpl implements UserService{
     @Override
     public void changePassword(LoginDTO resetDto) {
        User user = userRepository.findByEmail(resetDto.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
-        
+       
+       NotificationDTO notificationDTO = new NotificationDTO();
+       notificationDTO.setUserId(user.getId());
+       notificationDTO.setMessage("Password Reset Successfull.");
+       notificationDTO.setAction("Password Reset");
+       notificationService.sendNotification(notificationDTO);
+
        user.setPassword(passwordEncoder.encode(resetDto.getPassword()));
         userRepository.save(user);
     }
