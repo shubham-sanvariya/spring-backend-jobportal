@@ -62,4 +62,10 @@ public class JwtHelper {
                 .signWith(key)
                 .compact();
     }
+
+    public boolean validateToken(String token, String usernameOrEmail){
+        final String tokenUsernameOrEmail = getUsernameOrEmailFromToken(token);
+
+        return (tokenUsernameOrEmail.equals(usernameOrEmail) && !isTokenExpired(token));
+    }
 }
