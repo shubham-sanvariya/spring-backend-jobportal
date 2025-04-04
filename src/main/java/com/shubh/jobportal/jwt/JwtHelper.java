@@ -28,4 +28,8 @@ public class JwtHelper {
         final Claims claims = getAllClaimsFromToken(token);
         return claimsResolver.apply(claims);
     }
+
+    public String getUsernameOrEmailFromToken(String token){
+        return getClaimsFromToken(token, Claims::getSubject);
+    }
 }
