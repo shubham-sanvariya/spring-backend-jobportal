@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.shubh.jobportal.entity.User;
+import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.repo.UserRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -25,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService{
         : userRepository.findByName(usernameOrEmail);
 
         User user = optionalUser
-                .orElseThrow(() -> new UsernameNotFoundException("user not found by: " + usernameOrEmail));
+                .orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
 
         return CustomUserDetails.buildUserDetails(user);
     }
