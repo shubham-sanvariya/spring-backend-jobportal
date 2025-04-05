@@ -12,10 +12,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.UnsupportedJwtException;
+import lombok.extern.slf4j.Slf4j;
 
 @Component
+@Slf4j
 public class JwtHelper {
 
     @Value("${JWT_SECRET_KEY}")
@@ -63,9 +68,24 @@ public class JwtHelper {
                 .compact();
     }
 
-    public boolean validateToken(String token, String usernameOrEmail){
-        final String tokenUsernameOrEmail = getUsernameOrEmailFromToken(token);
+    public boolean isTokenValid(String token) {
+        try {
+             Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY.getBytes())
+                    .build()
+                    .parseClaimsJws(token);
 
-        return (tokenUsernameOrEmail.equals(usernameOrEmail) && !isTokenExpired(token));
+            return !isTokenExpired(token);
+        } catch (MalformedJwtException e) {
+            log.error("Invalid jwt token : {} ", e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.error("Expired Token : {} ", e.getMessage());
+        } catch (UnsupportedJwtException e) {
+            log.error("This token is not supported : {} ", e.getMessage());
+        } catch (IllegalArgumentException e) {
+            log.error("No claims found : {} ", e.getMessage());
+        }
+
+        return false;
     }
 }
