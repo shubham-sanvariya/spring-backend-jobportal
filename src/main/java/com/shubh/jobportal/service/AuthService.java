@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import com.shubh.jobportal.dto.LoginRequest;
 import com.shubh.jobportal.dto.LoginResponse;
 import com.shubh.jobportal.security.jwt.JwtHelper;
+import com.shubh.jobportal.security.userDetails.CustomUserDetails;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,16 @@ public class AuthService {
     private final AuthenticationManager authManger;
 
     private final JwtHelper jwtHelper;
+
+    public LoginResponse login(LoginRequest request){
+        Authentication auth = doAuthenticate(request.getEmail(),request.getPassword());
+
+        CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
+
+        String jwtToken = jwtHelper.generateToken(userDetails);
+
+        return new LoginResponse(userDetails.getId(),userDetails.getUsername(),userDetails.getEmail(),jwtToken);
+    }
 
     public Authentication doAuthenticate(String usernameOrEmail, String password){
         var authToken = new UsernamePasswordAuthenticationToken(usernameOrEmail,password);
