@@ -21,7 +21,7 @@ import lombok.NoArgsConstructor;
 public class CustomUserDetails implements UserDetails{
     
     private Long id;
-    private String usernameOrEmail;
+    private String email;
     private String password;
     private AccountType accountType;
     private Collection<GrantedAuthority> authorities;
@@ -51,7 +51,7 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public String getUsername() {
-        return usernameOrEmail;
+        return email;
     }
     
     
