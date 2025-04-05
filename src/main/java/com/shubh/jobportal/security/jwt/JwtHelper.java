@@ -5,11 +5,15 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+
+import com.shubh.jobportal.security.userDetails.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -54,23 +58,28 @@ public class JwtHelper {
         return expiration.before(new Date());
     }
 
-    public String generateToken(String usernameOrEmail) {
+    public String generateToken(CustomUserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
         Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
+        List<String> roles = userDetails.getAuthorities()
+                .stream().map(GrantedAuthority::getAuthority).toList();
+        
+        claims.put("roles",roles);
+        
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(usernameOrEmail)
+                .setSubject(userDetails.getUsernameOrEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() * JWT_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(key)
                 .compact();
     }
 
     public boolean isTokenValid(String token) {
         try {
-             Jwts.parserBuilder()
+            Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY.getBytes())
                     .build()
                     .parseClaimsJws(token);
