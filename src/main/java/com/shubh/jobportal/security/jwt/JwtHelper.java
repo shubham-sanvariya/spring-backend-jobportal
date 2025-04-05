@@ -67,10 +67,10 @@ public class JwtHelper {
                 .stream().map(GrantedAuthority::getAuthority).toList();
         
         claims.put("roles",roles);
-        
+
         return Jwts.builder()
                 .setClaims(claims)
-                .setSubject(userDetails.getUsernameOrEmail())
+                .setSubject(userDetails.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(key)

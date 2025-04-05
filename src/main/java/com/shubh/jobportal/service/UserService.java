@@ -1,12 +1,12 @@
 package com.shubh.jobportal.service;
 
-import com.shubh.jobportal.dto.LoginDTO;
+import com.shubh.jobportal.dto.LoginRequest;
 import com.shubh.jobportal.dto.UserDTO;
 
 
 public interface UserService {
 
-    UserDTO loginUser(LoginDTO loginDTO);
+    UserDTO loginUser(LoginRequest loginDTO);
 
     UserDTO registerUser(UserDTO userDTO);
 
@@ -18,5 +18,5 @@ public interface UserService {
 
     void removeExpiredOTPs();
 
-    void changePassword(LoginDTO resetDto);
+    void changePassword(LoginRequest resetDto);
 }

@@ -10,7 +10,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.shubh.jobportal.dto.LoginDTO;
+import com.shubh.jobportal.dto.LoginRequest;
 import com.shubh.jobportal.dto.NotificationDTO;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.entity.Otp;
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public UserDTO loginUser(LoginDTO loginDTO) {
+    public UserDTO loginUser(LoginRequest loginDTO) {
         User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
 
         if (!passwordEncoder.matches(loginDTO.getPassword(),user.getPassword())) {
@@ -106,7 +106,7 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public void changePassword(LoginDTO resetDto) {
+    public void changePassword(LoginRequest resetDto) {
        User user = userRepository.findByEmail(resetDto.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
        
        NotificationDTO notificationDTO = new NotificationDTO();

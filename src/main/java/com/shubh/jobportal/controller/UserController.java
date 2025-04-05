@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shubh.jobportal.dto.LoginDTO;
+import com.shubh.jobportal.dto.LoginRequest;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.service.UserService;
 import jakarta.validation.Valid;
@@ -35,11 +35,6 @@ public class UserController {
         return new ResponseEntity<>(userService.registerUser(userDTO),HttpStatus.CREATED);
     }
 
-    @PostMapping("/login")
-    public ResponseEntity<UserDTO> loginUser(@RequestBody @Valid LoginDTO loginDTO){
-        return new ResponseEntity<>(userService.loginUser(loginDTO),HttpStatus.OK);
-    }
-
     @PostMapping("/sendOtp/{email}")
     public ResponseEntity<String> sendOTP(@PathVariable @Email(message = "{user.email.invalid}") String email) throws Exception{
         userService.sendOtp(email);
@@ -54,7 +49,7 @@ public class UserController {
 
 
     @PostMapping("/changePass")
-    public ResponseEntity<String> changePassword(@RequestBody @Valid LoginDTO resetDto)
+    public ResponseEntity<String> changePassword(@RequestBody @Valid LoginRequest resetDto)
          {
         userService.changePassword(resetDto);
         return new ResponseEntity<>("Password Changed Successfully.", HttpStatus.OK);
