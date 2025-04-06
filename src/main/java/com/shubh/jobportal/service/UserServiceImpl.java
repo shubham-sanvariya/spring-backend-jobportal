@@ -37,31 +37,6 @@ public class UserServiceImpl implements UserService{
 
     private final JavaMailSender mailSender;
 
-
-    @Override
-    public UserDTO registerUser(UserDTO userDTO) {
-        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-            throw new JobPortalException("USER_FOUND");
-        }
-        userDTO.setProfileId(profileService.createProfile(userDTO.getEmail()));
-        userDTO.setId(Utilities.getNextSequence("users"));
-        userDTO.setPassword(passwordEncoder.encode(userDTO.getPassword()));
-        User user = userDTO.toEntity();
-        user = userRepository.save(user);
-        return user.toDTO();
-    }
-
-    @Override
-    public UserDTO loginUser(LoginRequest loginDTO) {
-        User user = userRepository.findByEmail(loginDTO.getEmail()).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
-
-        if (!passwordEncoder.matches(loginDTO.getPassword(),user.getPassword())) {
-            throw new JobPortalException("INVALID_LOGIN_CREDENTIALS");
-        }
-
-        return user.toDTO();
-    }
-
     @Override
     public void sendOtp(String email) throws Exception {
        userRepository.findByEmail(email).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));

@@ -6,10 +6,6 @@ import com.shubh.jobportal.dto.UserDTO;
 
 public interface UserService {
 
-    UserDTO loginUser(LoginRequest loginDTO);
-
-    UserDTO registerUser(UserDTO userDTO);
-
     UserDTO updateUserName(Long id, String updatedName);
 
     void sendOtp(String email) throws Exception;
