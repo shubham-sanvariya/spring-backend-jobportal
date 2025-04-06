@@ -30,11 +30,6 @@ public class UserController {
 
     private final UserService userService;
 
-    @PostMapping("/register")
-    public ResponseEntity<UserDTO> registerUser(@RequestBody @Valid UserDTO userDTO){
-        return new ResponseEntity<>(userService.registerUser(userDTO),HttpStatus.CREATED);
-    }
-
     @PostMapping("/sendOtp/{email}")
     public ResponseEntity<String> sendOTP(@PathVariable @Email(message = "{user.email.invalid}") String email) throws Exception{
         userService.sendOtp(email);
