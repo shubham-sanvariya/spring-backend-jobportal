@@ -3,6 +3,7 @@ package com.shubh.jobportal.service;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -37,6 +38,10 @@ public class UserServiceImpl implements UserService{
 
     private final JavaMailSender mailSender;
 
+
+    @Value("${spring.mail.username}")
+    private String domainName;
+
     @Override
     public void sendOtp(String email) throws Exception {
        userRepository.findByEmail(email).orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
@@ -45,6 +50,7 @@ public class UserServiceImpl implements UserService{
        MimeMessageHelper message = new MimeMessageHelper(mm, true);
        message.setTo(email);
        message.setSubject("Your OTP Code");
+       message.setFrom(domainName);
 
        String generatedOTP = Utilities.generateOTP();
        Otp otp = new Otp(email,generatedOTP, LocalDateTime.now());
@@ -61,13 +67,13 @@ public class UserServiceImpl implements UserService{
             throw new JobPortalException("OTP_INCORRECT");
         }
 
-        if (otpEntity.getCreationTime().plusMinutes(5).isBefore(LocalDateTime.now())) {
+        if (otpEntity.getCreationTime().plusMinutes(10).isBefore(LocalDateTime.now())) {
             throw new JobPortalException("OTP_EXPIRED");
         }
 
     }
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 3600000)
     public void removeExpiredOTPs() {
         System.out.println("fetching expired list of otps.");
         LocalDateTime expiry = LocalDateTime.now().minusMinutes(5);
