@@ -21,9 +21,10 @@ public class ProfileServiceImpl implements ProfileService{
     private final ProfileRepository profileRepository;
 
     @Override
-    public long createProfile(String email) {
+    public long createProfile(String name) {
         Profile profile = new Profile();
         profile.setId(Utilities.getNextSequence("profiles"));
+        profile.setName(name);
         profile.setSkills(new ArrayList<>());
         profile.setExperiences(new ArrayList<>());
         profile.setCertificates(new ArrayList<>());
