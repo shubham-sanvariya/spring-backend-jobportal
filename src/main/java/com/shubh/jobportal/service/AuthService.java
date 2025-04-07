@@ -9,12 +9,10 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.shubh.jobportal.dto.LoginRequest;
-import com.shubh.jobportal.dto.LoginResponse;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.entity.Otp;
 import com.shubh.jobportal.exception.JobPortalException;
@@ -46,21 +44,15 @@ public class AuthService {
     @Value("${spring.mail.username}")
     private String domainName;
 
-    public LoginResponse login(LoginRequest request) {
+    public String login(LoginRequest request) {
         Authentication auth = doAuthenticate(request.getEmail(), request.getPassword());
 
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
 
         String jwtToken = jwtHelper.generateToken(userDetails);
 
-        String authorities = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("User has no authorities."));
 
-        return new LoginResponse(userDetails.getId(), userDetails.getName(), userDetails.getEmail(),
-                userDetails.getProfileId(), jwtToken, authorities);
+        return jwtToken;
     }
 
     public Authentication doAuthenticate(String usernameOrEmail, String password) {
