@@ -4,7 +4,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,8 +16,7 @@ import com.shubh.jobportal.dto.LoginRequest;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.service.UserService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Pattern;
+
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -29,18 +27,6 @@ import lombok.RequiredArgsConstructor;
 public class UserController {
 
     private final UserService userService;
-
-    @PostMapping("/sendOtp/{email}")
-    public ResponseEntity<String> sendOTP(@PathVariable @Email(message = "{user.email.invalid}") String email) throws Exception{
-        userService.sendOtp(email);
-        return new ResponseEntity<>("OTP sent successfully.",HttpStatus.OK);
-    }
-
-    @GetMapping("/verifyOtp/{email}/{otp}")
-    public ResponseEntity<String> verifyOTP(@PathVariable @Email(message = "{user.email.invalid}") String email,@PathVariable @Pattern(regexp = "^[0-9]{6}$", message = "{otp.invalid}") String otp) throws Exception{
-        userService.verifyOTP(email,otp);
-        return new ResponseEntity<>("OTP has been verified.",HttpStatus.OK);
-    }
 
 
     @PostMapping("/changePass")
