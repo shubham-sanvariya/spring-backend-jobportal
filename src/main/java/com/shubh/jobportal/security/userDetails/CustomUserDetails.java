@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.shubh.jobportal.dto.AccountType;
 import com.shubh.jobportal.entity.User;
 
 import lombok.AllArgsConstructor;
@@ -21,9 +20,10 @@ import lombok.NoArgsConstructor;
 public class CustomUserDetails implements UserDetails{
     
     private Long id;
+    private String name;
     private String email;
     private String password;
-    private AccountType accountType;
+    private Long profileId;
     private Collection<GrantedAuthority> authorities;
 
     public static CustomUserDetails buildUserDetails(User user){
@@ -32,9 +32,10 @@ public class CustomUserDetails implements UserDetails{
 
         return new CustomUserDetails(
             user.getId(),
+            user.getName(),
             user.getEmail(),
             user.getPassword(),
-            user.getAccountType(),
+            user.getProfileId(),
             grantedAuthorities
         );
     }
