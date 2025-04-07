@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.shubh.jobportal.dto.LoginRequest;
-import com.shubh.jobportal.dto.LoginResponse;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.security.jwt.JwtHelper;
 import com.shubh.jobportal.service.AuthService;
@@ -35,8 +34,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody @Valid LoginRequest req){
-        return new ResponseEntity<LoginResponse>(authService.login(req),HttpStatus.OK);
+    public ResponseEntity<String > login(@RequestBody @Valid LoginRequest req){
+        return new ResponseEntity<String >(authService.login(req),HttpStatus.OK);
     }
 
 
