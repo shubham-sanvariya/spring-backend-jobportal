@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
@@ -63,10 +62,16 @@ public class JwtHelper {
 
         Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
-        List<String> roles = userDetails.getAuthorities()
-                .stream().map(GrantedAuthority::getAuthority).toList();
+        String authoritiy = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("User has no authorities."));
         
-        claims.put("roles",roles);
+        claims.put("id", userDetails.getId());
+        claims.put("name", userDetails.getName());
+        claims.put("accountType", authoritiy);
+        claims.put("profileId", userDetails.getProfileId());
 
         return Jwts.builder()
                 .setClaims(claims)
