@@ -16,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.stereotype.Service;
+import jakarta.servlet.http.Cookie;
 
 import com.shubh.jobportal.dto.Tokens;
 import com.shubh.jobportal.dto.LoginRequest;
@@ -61,17 +62,18 @@ public class AuthService {
         String jwtToken = jwtHelper.generateAuthToken(userDetails);
         String refreshToken = jwtHelper.generateRefreshToken(userDetails);
 
-        Tokens tokens = new Tokens(jwtToken,refreshToken);
+        Tokens tokens = new Tokens(jwtToken, refreshToken);
 
-         String authority = userDetails.getAuthorities()
+        String authority = userDetails.getAuthorities()
                 .stream()
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("User has no authorities."));
 
-        LoginResponse response = new LoginResponse(userDetails.getId(),userDetails.getName(),authority,userDetails.getProfileId());
+        LoginResponse response = new LoginResponse(userDetails.getId(), userDetails.getName(), authority,
+                userDetails.getProfileId());
 
-        return new LoginTokenResponse(tokens,response);
+        return new LoginTokenResponse(tokens, response);
     }
 
     public Authentication doAuthenticate(String usernameOrEmail, String password) {
@@ -90,17 +92,17 @@ public class AuthService {
 
     public void registerUser(UserDTO userDTO) throws MessagingException {
 
-            if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
-                throw new JobPortalException("USER_FOUND");
-            }
+        if (userRepository.findByEmail(userDTO.getEmail()).isPresent()) {
+            throw new JobPortalException("USER_FOUND");
+        }
 
-            String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
+        String encodedPassword = passwordEncoder.encode(userDTO.getPassword());
 
-            userDTO.setProfileId(profileService.createProfile(userDTO.getName()));
-            userDTO.setId(Utilities.getNextSequence("users"));
-            userDTO.setPassword(encodedPassword); // Store the encoded version
+        userDTO.setProfileId(profileService.createProfile(userDTO.getName()));
+        userDTO.setId(Utilities.getNextSequence("users"));
+        userDTO.setPassword(encodedPassword); // Store the encoded version
 
-            userRepository.save(userDTO.toEntity());
+        userRepository.save(userDTO.toEntity());
 
     }
 
@@ -153,5 +155,15 @@ public class AuthService {
         String accessToken = jwtHelper.generateAuthToken(customUserDetails);
 
         return accessToken;
+    }
+
+    public Cookie createCookie(String tokenType,String token, int cookieMaxAge){
+        Cookie cookie = new Cookie(tokenType, token);
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(cookieMaxAge);
+
+        return cookie;
     }
 }
