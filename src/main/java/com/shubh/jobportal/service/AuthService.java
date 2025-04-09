@@ -49,7 +49,7 @@ public class AuthService {
 
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
 
-        String jwtToken = jwtHelper.generateToken(userDetails);
+        String jwtToken = jwtHelper.generateAuthToken(userDetails);
 
 
         return jwtToken;
