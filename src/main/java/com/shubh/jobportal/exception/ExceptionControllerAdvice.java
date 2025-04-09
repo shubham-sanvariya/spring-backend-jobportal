@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,21 @@ public class ExceptionControllerAdvice {
         LocalDateTime.now());
 
         return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(InvalidCookieException.class)
+    public ResponseEntity<ErrorInfo> handleInvalidCookieException(InvalidCookieException ex){
+        String message = environment.getProperty(ex.getMessage());
+        ErrorInfo errorInfo = new ErrorInfo(message, HttpStatus.UNAUTHORIZED.value(), LocalDateTime.now());
+
+        return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.UNAUTHORIZED);
+    }
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ErrorInfo> handleIllegalArgumentException(IllegalArgumentException ex){
+        String message = environment.getProperty(ex.getMessage());
+        ErrorInfo errorInfo = new ErrorInfo(message, HttpStatus.NOT_FOUND.value(), LocalDateTime.now());
+
+        return new ResponseEntity<ErrorInfo>(errorInfo, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler({MethodArgumentNotValidException.class, ConstraintViolationException.class})
