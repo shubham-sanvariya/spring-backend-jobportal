@@ -52,9 +52,9 @@ public class AuthController {
         String accessToken = auth.tokens().accessToken();
         String refreshToken = auth.tokens().refreshToken();
 
-        Cookie accessCookie = authService.createCookie("accessToken",accessToken,ACCESS_COOKIE_MAX_AGE);
+        Cookie accessCookie = authService.createCookie("accessToken", accessToken, ACCESS_COOKIE_MAX_AGE);
 
-        Cookie refreshCookie = authService.createCookie("refreshToken",refreshToken,REFRESH_COOKIE_MAX_AGE); // 3 days
+        Cookie refreshCookie = authService.createCookie("refreshToken", refreshToken, REFRESH_COOKIE_MAX_AGE); // 3 days
 
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
@@ -86,10 +86,26 @@ public class AuthController {
     public ResponseEntity<String> refreshAccessToken(@CookieValue String refreshToken,
             HttpServletResponse response) {
 
-            String newAccessToken = authService.generateRefreshAccessToken(refreshToken);
+        String newAccessToken = authService.generateRefreshAccessToken(refreshToken);
 
-            response.addCookie(authService.createCookie("accessToken", newAccessToken, ACCESS_COOKIE_MAX_AGE));
-            return new ResponseEntity<String>(newAccessToken,HttpStatus.OK);
+        response.addCookie(authService.createCookie("accessToken", newAccessToken, ACCESS_COOKIE_MAX_AGE));
+        return new ResponseEntity<String>(newAccessToken, HttpStatus.OK);
+
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(HttpServletResponse response) {
+
+        Cookie accessCookie = authService.createCookie("accessToken", null, 0);
+
+        Cookie refreshCookie = authService.createCookie("refreshToken", null, 0);
+
+        response.addCookie(accessCookie);
+        response.addCookie(refreshCookie);
+
+        response.reset();
+
+        return new ResponseEntity<String>("Logged out successfully", HttpStatus.OK);
 
     }
 }
