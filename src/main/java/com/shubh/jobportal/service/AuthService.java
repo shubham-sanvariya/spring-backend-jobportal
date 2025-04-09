@@ -9,10 +9,18 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.stereotype.Service;
+
+import com.shubh.jobportal.dto.Tokens;
 import com.shubh.jobportal.dto.LoginRequest;
+import com.shubh.jobportal.dto.LoginResponse;
+import com.shubh.jobportal.dto.LoginTokenResponse;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.entity.Otp;
 import com.shubh.jobportal.exception.JobPortalException;
@@ -36,6 +44,7 @@ public class AuthService {
     private final OtpRepository otpRepository;
     private final ProfileService profileService;
     private final UserService userService;
+    private final UserDetailsService userDetailsService;
 
     private final JwtHelper jwtHelper;
     private final PasswordEncoder passwordEncoder;
@@ -44,15 +53,25 @@ public class AuthService {
     @Value("${spring.mail.username}")
     private String domainName;
 
-    public String login(LoginRequest request) {
+    public LoginTokenResponse login(LoginRequest request) {
         Authentication auth = doAuthenticate(request.getEmail(), request.getPassword());
 
         CustomUserDetails userDetails = (CustomUserDetails) auth.getPrincipal();
 
         String jwtToken = jwtHelper.generateAuthToken(userDetails);
+        String refreshToken = jwtHelper.generateRefreshToken(userDetails);
 
+        Tokens tokens = new Tokens(jwtToken,refreshToken);
 
-        return jwtToken;
+         String authority = userDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("User has no authorities."));
+
+        LoginResponse response = new LoginResponse(userDetails.getId(),userDetails.getName(),authority,userDetails.getProfileId());
+
+        return new LoginTokenResponse(tokens,response);
     }
 
     public Authentication doAuthenticate(String usernameOrEmail, String password) {
@@ -115,5 +134,24 @@ public class AuthService {
             throw new JobPortalException("OTP_EXPIRED");
         }
 
+    }
+
+    public String generateRefreshAccessToken(String refreshToken) {
+        if (refreshToken == null || !jwtHelper.isRefreshToken(refreshToken)) {
+            throw new InvalidCookieException("");
+        }
+
+        String usernameFromToken = jwtHelper.getUsernameOrEmailFromToken(refreshToken);
+        UserDetails userDetails = userDetailsService.loadUserByUsername(usernameFromToken);
+
+        if (userDetails == null) {
+            throw new IllegalArgumentException("USER_NOT_FOUND");
+        }
+
+        CustomUserDetails customUserDetails = (CustomUserDetails) userDetails;
+
+        String accessToken = jwtHelper.generateAuthToken(customUserDetails);
+
+        return accessToken;
     }
 }
