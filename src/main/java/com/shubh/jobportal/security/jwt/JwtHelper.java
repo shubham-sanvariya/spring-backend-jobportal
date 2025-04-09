@@ -33,6 +33,9 @@ public class JwtHelper {
     @Value("${JWT_TOKEN_VALIDITY}")
     private long JWT_TOKEN_VALIDITY;
 
+    @Value("${JWT_REFRESH_TOKEN_VALIDITY}")
+    private long JWT_REFRESH_TOKEN_VALIDITY;
+
     public Claims getAllClaimsFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(SECRET_KEY.getBytes())
@@ -58,14 +61,14 @@ public class JwtHelper {
         return expiration.before(new Date());
     }
 
-    public String generateToken(CustomUserDetails userDetails, Map<String, StringOrLongValue> claims) {
+    public String generateToken(CustomUserDetails userDetails, Map<String, StringOrLongValue> claims, Long expiration) {
         Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(key)
                 .compact();
     }
@@ -77,19 +80,16 @@ public class JwtHelper {
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("User has no authorities."));
         Map<String, StringOrLongValue> claims = new HashMap<>();
-        claims.put("id", new StringOrLongValue.LongValue(customUserDetails.getId()));
-        claims.put("name", new StringOrLongValue.StringValue(customUserDetails.getName()));
         claims.put("accountType", new StringOrLongValue.StringValue(authority));
-        claims.put("profileId", new StringOrLongValue.LongValue(customUserDetails.getProfileId()));
 
-        return generateToken(customUserDetails, claims);
+        return generateToken(customUserDetails, claims, JWT_TOKEN_VALIDITY);
     }
 
     public String generateRefreshToken(CustomUserDetails customUserDetails){
         Map<String, StringOrLongValue> claims = new HashMap<>();
-        claims.put("tokenType",new StringOrLongValue.StringValue("refreshToken"));
+        claims.put("tokenType",new StringOrLongValue.StringValue("refresh"));
 
-        return generateToken(customUserDetails, claims);
+        return generateToken(customUserDetails, claims, JWT_REFRESH_TOKEN_VALIDITY);
     }
 
     public boolean isTokenValid(String token) {
@@ -112,4 +112,13 @@ public class JwtHelper {
 
         return false;
     }
+
+    public boolean isRefreshToken(String token) {
+        Claims claims = getAllClaimsFromToken(token);
+        if (claims == null) {
+            return false;
+        }
+        return "refresh".equals(claims.get("tokenType"));
+    }
+
 }
