@@ -3,7 +3,6 @@ package com.shubh.jobportal.controller;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.web.authentication.rememberme.InvalidCookieException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -53,17 +52,9 @@ public class AuthController {
         String accessToken = auth.tokens().accessToken();
         String refreshToken = auth.tokens().refreshToken();
 
-        Cookie accessCookie = new Cookie("accessToken", accessToken);
-        accessCookie.setHttpOnly(true);
-        accessCookie.setSecure(true);
-        accessCookie.setPath("/");
-        accessCookie.setMaxAge(ACCESS_COOKIE_MAX_AGE); // 15 mins
+        Cookie accessCookie = authService.createCookie("accessToken",accessToken,ACCESS_COOKIE_MAX_AGE);
 
-        Cookie refreshCookie = new Cookie("refreshToken", refreshToken);
-        refreshCookie.setHttpOnly(true);
-        refreshCookie.setSecure(true);
-        refreshCookie.setPath("/");
-        refreshCookie.setMaxAge(REFRESH_COOKIE_MAX_AGE); // 3 days
+        Cookie refreshCookie = authService.createCookie("refreshToken",refreshToken,REFRESH_COOKIE_MAX_AGE); // 3 days
 
         response.addCookie(accessCookie);
         response.addCookie(refreshCookie);
@@ -96,6 +87,8 @@ public class AuthController {
             HttpServletResponse response) {
 
             String newAccessToken = authService.generateRefreshAccessToken(refreshToken);
+
+            response.addCookie(authService.createCookie("accessToken", newAccessToken, ACCESS_COOKIE_MAX_AGE));
             return new ResponseEntity<String>(newAccessToken,HttpStatus.OK);
 
     }
