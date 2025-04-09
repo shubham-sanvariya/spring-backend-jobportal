@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
+import com.shubh.jobportal.records.StringOrLongValue;
 import com.shubh.jobportal.security.userDetails.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -57,21 +58,8 @@ public class JwtHelper {
         return expiration.before(new Date());
     }
 
-    public String generateToken(CustomUserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
-
+    public String generateToken(CustomUserDetails userDetails, Map<String, StringOrLongValue> claims) {
         Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
-
-        String authoritiy = userDetails.getAuthorities()
-                .stream()
-                .map(GrantedAuthority::getAuthority)
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("User has no authorities."));
-        
-        claims.put("id", userDetails.getId());
-        claims.put("name", userDetails.getName());
-        claims.put("accountType", authoritiy);
-        claims.put("profileId", userDetails.getProfileId());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -80,6 +68,28 @@ public class JwtHelper {
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY))
                 .signWith(key)
                 .compact();
+    }
+
+    public String generateAuthToken(CustomUserDetails customUserDetails) {
+        String authority = customUserDetails.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("User has no authorities."));
+        Map<String, StringOrLongValue> claims = new HashMap<>();
+        claims.put("id", new StringOrLongValue.LongValue(customUserDetails.getId()));
+        claims.put("name", new StringOrLongValue.StringValue(customUserDetails.getName()));
+        claims.put("accountType", new StringOrLongValue.StringValue(authority));
+        claims.put("profileId", new StringOrLongValue.LongValue(customUserDetails.getProfileId()));
+
+        return generateToken(customUserDetails, claims);
+    }
+
+    public String generateRefreshToken(CustomUserDetails customUserDetails){
+        Map<String, StringOrLongValue> claims = new HashMap<>();
+        claims.put("tokenType",new StringOrLongValue.StringValue("refreshToken"));
+
+        return generateToken(customUserDetails, claims);
     }
 
     public boolean isTokenValid(String token) {
