@@ -140,7 +140,7 @@ public class AuthService {
 
     public String generateRefreshAccessToken(String refreshToken) {
         if (refreshToken == null || !jwtHelper.isRefreshToken(refreshToken)) {
-            throw new InvalidCookieException("");
+            throw new InvalidCookieException("INVALID_REFRESH_TOKEN");
         }
 
         String usernameFromToken = jwtHelper.getUsernameOrEmailFromToken(refreshToken);
