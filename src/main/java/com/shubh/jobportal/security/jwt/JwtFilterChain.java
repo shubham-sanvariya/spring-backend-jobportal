@@ -8,11 +8,11 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -27,12 +27,13 @@ public class JwtFilterChain extends OncePerRequestFilter{
     private final UserDetailsService userDetailsService;
 
     private String parseJwtFilter(HttpServletRequest request){
-        String requestHeaders = request.getHeader("Authorization");
-
-        if (StringUtils.hasText(requestHeaders) && requestHeaders.startsWith("Bearer ")) {
-            return requestHeaders.substring(7);
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("accessToken".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
         }
-
         return null;
     }
 
@@ -60,4 +61,11 @@ public class JwtFilterChain extends OncePerRequestFilter{
 
         filterChain.doFilter(request,response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(@NonNull HttpServletRequest request) throws ServletException {
+        return request.getServletPath().startsWith("/auth/");
+    }
+
+    
 }
