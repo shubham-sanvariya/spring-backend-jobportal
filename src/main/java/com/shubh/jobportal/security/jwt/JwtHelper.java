@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 
-import com.shubh.jobportal.records.StringOrLongValue;
 import com.shubh.jobportal.security.userDetails.CustomUserDetails;
 
 import io.jsonwebtoken.Claims;
@@ -61,7 +60,7 @@ public class JwtHelper {
         return expiration.before(new Date());
     }
 
-    public String generateToken(CustomUserDetails userDetails, Map<String, StringOrLongValue> claims, Long expiration) {
+    public String generateToken(CustomUserDetails userDetails, Map<String, Object> claims, Long expiration) {
         Key key = new SecretKeySpec(SECRET_KEY.getBytes(), SignatureAlgorithm.HS256.getJcaName());
 
         return Jwts.builder()
@@ -79,15 +78,15 @@ public class JwtHelper {
                 .map(GrantedAuthority::getAuthority)
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("User has no authorities."));
-        Map<String, StringOrLongValue> claims = new HashMap<>();
-        claims.put("accountType", new StringOrLongValue.StringValue(authority));
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("accountType", authority);
 
         return generateToken(customUserDetails, claims, JWT_TOKEN_VALIDITY);
     }
 
     public String generateRefreshToken(CustomUserDetails customUserDetails){
-        Map<String, StringOrLongValue> claims = new HashMap<>();
-        claims.put("tokenType",new StringOrLongValue.StringValue("refresh"));
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("tokenType","refresh");
 
         return generateToken(customUserDetails, claims, JWT_REFRESH_TOKEN_VALIDITY);
     }
@@ -118,6 +117,8 @@ public class JwtHelper {
         if (claims == null) {
             return false;
         }
+
+        
         return "refresh".equals(claims.get("tokenType"));
     }
 
