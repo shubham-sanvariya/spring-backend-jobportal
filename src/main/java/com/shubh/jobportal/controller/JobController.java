@@ -48,6 +48,12 @@ public class JobController {
         return new ResponseEntity<PaginatedResponse<JobDTO>>(PaginatedResponse.fromPage(jobs),HttpStatus.OK);
     }
 
+    @GetMapping("/find")
+    public ResponseEntity<PaginatedResponse<JobDTO>> getJobsByCompanyName(@RequestParam String companyName, Pageable pageable){
+        Page<JobDTO> jobs = jobService.getJobsByCompany(companyName,pageable);
+        return new ResponseEntity<PaginatedResponse<JobDTO>>(PaginatedResponse.fromPage(jobs),HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<JobDTO> getJobById(@PathVariable Long id){
         return new ResponseEntity<JobDTO>(jobService.getJobDTOById(id),HttpStatus.OK);
