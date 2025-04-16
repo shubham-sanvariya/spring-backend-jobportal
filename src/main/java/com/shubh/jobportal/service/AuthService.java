@@ -167,7 +167,7 @@ public class AuthService {
         cookie.setSecure(true);
         cookie.setPath("/");
         cookie.setMaxAge(cookieMaxAge);
-
+        cookie.setAttribute("SameSite", "None");
         return cookie;
     }
 }
