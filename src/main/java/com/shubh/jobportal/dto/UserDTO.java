@@ -29,7 +29,6 @@ public class UserDTO {
     @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d)(?=.*[@#$%^&+=!]).{8,15}$", message = "{user.password.invalid}")
     private String password;
 
-    @NotNull
     private AccountType accountType;
     
     private Long profileId;
