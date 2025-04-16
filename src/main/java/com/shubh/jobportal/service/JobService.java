@@ -29,4 +29,6 @@ public interface JobService {
     List<JobDTO> getJobsByPostedBy(Long id);
 
     Page<JobDTO> getJobsByJobStatus(JobStatus jobStatus, Pageable pageable);
+
+    Page<JobDTO> getJobsByCompany(String company, Pageable pageable);
 }

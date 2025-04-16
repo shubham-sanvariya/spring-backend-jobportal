@@ -136,4 +136,14 @@ public class JobServiceImpl implements JobService {
         return jobRepository.findByJobStatus(jobStatus,pageable).map(Job::toDTO);
     }
 
+    @Override
+    public Page<JobDTO> getJobsByCompany(String companyName, Pageable pageable) {
+        if (companyName.isEmpty()) {
+            throw new JobPortalException("company name is empty");
+        }
+
+        return jobRepository.findByCompany(companyName,pageable).map(Job::toDTO);
+    }
+
+    
 }
