@@ -64,7 +64,7 @@ public class SecurityConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:5173","https://react-job-portal-42b67z8sh-shubham-sanvariyas-projects.vercel.app"));
+        configuration.setAllowedOrigins(List.of("http://localhost:5173","https://react-job-portal-orcin.vercel.app","https://react-job-portal-shubham-sanvariyas-projects.vercel.app"));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("*"));
         configuration.setAllowCredentials(true);
