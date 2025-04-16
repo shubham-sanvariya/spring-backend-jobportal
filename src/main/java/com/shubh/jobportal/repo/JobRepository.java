@@ -14,4 +14,6 @@ public interface JobRepository extends MongoRepository<Job,Long>{
     List<Job> findByPostedBy(Long postedBy);
 
     Page<Job> findByJobStatus(JobStatus jobStatus, Pageable pageable);
+
+    Page<Job> findByCompany(String company, Pageable pageable);
 }
