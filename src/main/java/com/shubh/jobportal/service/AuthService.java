@@ -1,6 +1,7 @@
 package com.shubh.jobportal.service;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,6 +25,7 @@ import com.shubh.jobportal.dto.LoginResponse;
 import com.shubh.jobportal.dto.LoginTokenResponse;
 import com.shubh.jobportal.dto.UserDTO;
 import com.shubh.jobportal.entity.Otp;
+import com.shubh.jobportal.entity.User;
 import com.shubh.jobportal.exception.JobPortalException;
 import com.shubh.jobportal.repo.OtpRepository;
 import com.shubh.jobportal.repo.UserRepository;
@@ -107,9 +109,11 @@ public class AuthService {
     }
 
     public void sendOtp(String email, String check) throws MessagingException {
-        if (check.toLowerCase() == "reset") {
-            userRepository.findByEmail(email)
-                    .orElseThrow(() -> new JobPortalException("USER_NOT_FOUND"));
+        Optional<User> user = userRepository.findByEmail(email);
+        if (check.toLowerCase() == "reset" && user.isEmpty()) {
+            throw new JobPortalException("USER_NOT_FOUND");
+        }else if (check.toLowerCase() == "register" && user.isPresent()) {
+            throw new JobPortalException("EMAIL_FOUND");
         }
 
         MimeMessage mm = mailSender.createMimeMessage();
@@ -157,7 +161,7 @@ public class AuthService {
         return accessToken;
     }
 
-    public Cookie createCookie(String tokenType,String token, int cookieMaxAge){
+    public Cookie createCookie(String tokenType, String token, int cookieMaxAge) {
         Cookie cookie = new Cookie(tokenType, token);
         cookie.setHttpOnly(true);
         cookie.setSecure(true);
